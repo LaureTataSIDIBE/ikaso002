@@ -43,7 +43,10 @@ try {
                 'type_user' => $type_user,
                 'nom' => $user['nom'],
                 'email' => $user['email'],
-                'id_user' => $user['id_user']
+                'id_user' => $user['id_user'],
+                'id_patient' => 0,
+                'id_medecin' => 0,
+
             ];
 
             // Récupérer id_patient ou id_medecin en fonction du type d'utilisateur
@@ -56,6 +59,7 @@ try {
                 $patient = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 if ($patient) {
+                    $response['id_user'] = $patient['id_user'];
                     $response['id_patient'] = $patient['id_patient'];
                 }
             } elseif ($type_user == "medecin") {

@@ -11,10 +11,10 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 include "dbconnect.php"; 
 
 if (isset($_GET['id_medecin'])) {
-    $id_medecin = intval($_GET['id_medecin']);
+    $id_medecin = $_GET['id_medecin'];
     
     // Préparer la requête SQL pour obtenir les rendez-vous acceptés
-    $stmt = $conn->prepare("
+    $stmt =  $pdo->prepare("
        SELECT 
             u.prenom, 
             u.nom, 
@@ -27,27 +27,23 @@ if (isset($_GET['id_medecin'])) {
         JOIN
             user u ON u.id_user = p.id_user
         WHERE 
-            h.id_medecin = ?;
+            h.id_medecin = :id_medecin;
                 
     ");
     
-    $stmt->bind_param("i", $id_medecin);
+
     
-    if ($stmt->execute()) {
-        $result = $stmt->get_result();
-        $rendezvous = [];
-
-        while ($row = $result->fetch_assoc()) {
-            $rendezvous[] = $row;
-        }
-
+    if ($stmt->execute([
+        ':id_medecin' => $_GET['id_medecin']
+    ])) {
+        // Récupérer les résultats correctement avec PDO
+        $rendezvous = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
         echo json_encode(['rendezvous' => $rendezvous]);
     } else {
-        echo json_encode(['error' => 'Erreur lors de l\'exécution de la requête : ' . $stmt->error]);
-    }
+        echo json_encode(['error' => 'Erreur lors de l\'exécution de la requête']);
+    }    
 } else {
     echo json_encode(['error' => 'ID du médecin non fourni']);
 }
-
-$conn->close();
 ?>

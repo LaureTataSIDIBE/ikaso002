@@ -11,12 +11,9 @@ $id_user = $input['id_user'];
 $old_password = $input['old_password'];
 $new_password = $input['new_password'];
 
-// Connexion à la base de données
-$conn = new mysqli('localhost', 'username', 'password', 'ikaso001');
 
-if ($conn->connect_error) {
-    die(json_encode(['error' => 'Échec de la connexion à la base de données.']));
-}
+
+
 
 // Vérifier l'ancien mot de passe
 $sql = "SELECT mot_de_passe FROM user WHERE id_user = ?";

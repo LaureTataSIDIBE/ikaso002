@@ -27,7 +27,7 @@ try {
             u.prenom AS doctor_surname
         FROM rendezvous r
         JOIN patient p ON r.id_patient = p.id_patient
-        JOIN user u ON r.id_medecin = u.id_user
+        JOIN user u ON p.id_user = u.id_user
         WHERE r.id_medecin = :id_medecin
     ";
     $stmt = $pdo->prepare($query);
